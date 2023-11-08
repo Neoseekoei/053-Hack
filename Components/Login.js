@@ -8,9 +8,48 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import {useState} from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
-export class Login extends Component {
-  render() {
+
+
+
+const Login = ({navigation}) => {
+
+
+
+
+    const [text, onChangeText] = React.useState('');
+
+     // State variable to hold the password
+	const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
+
+	// State variable to track password visibility
+	const [showPassword, setShowPassword] = useState(false);
+
+	// Function to toggle the password visibility state
+	const toggleShowPassword = ({navigation}) => {
+		setShowPassword(!showPassword);
+	};
+
+  const Create =(() =>{
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        alert("You Have Successfully Logged In!!!")
+        navigation.navigate("Profile")
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+    })
+
     return (
       <View>
         <ImageBackground
@@ -23,22 +62,28 @@ export class Login extends Component {
           
             <Text style={styles.title}>SIGN IN</Text>
             <View style={styles.inputContainer}>
-            <Image source={require("../assets/user.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Username" />
+            <Image source={require("../assets/3.png")} style={styles.icon} />
+            <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail}/>
           </View>
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/MUNI.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Password" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword} />
           </View>
 
-          <TouchableOpacity style={styles.Loginbtn}>SIGN UP</TouchableOpacity>
-          <TouchableOpacity style={styles.btn2}>SIGN UP</TouchableOpacity>
+          
+            <TouchableOpacity  onPress={Create}><Text style={styles.Loginbtn}>SIGN IN</Text></TouchableOpacity>
+          
+          <TouchableOpacity style={styles.btn2} onPress={() => navigation.navigate("Signup")}>SIGN UP</TouchableOpacity>
         </View>
       </View>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   backgroundImage: {

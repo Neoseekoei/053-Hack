@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Text,
   View,
@@ -8,9 +8,31 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
-export class Signup extends Component {
-  render() {
+const Signup = ({navigation}) => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const Register = (() =>{
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        alert("You Have Successfully created!!")
+        navigation.navigate("Profile")
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert("error")
+        // ..
+      });
+    })
+ 
     return (
       <View>
         <ImageBackground
@@ -24,12 +46,19 @@ export class Signup extends Component {
             <Text style={styles.title}>SIGN IN</Text>
             <View style={styles.inputContainer}>
             <Image source={require("../assets/user.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Username" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Username"
+             />
           </View>
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/3.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Email" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Email" 
+            value={email}
+            onChangeText={setEmail}/>
           </View>
 
           <View style={styles.inputContainer}>
@@ -39,16 +68,20 @@ export class Signup extends Component {
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/MUNI.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Password" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword} />
           </View>
 
-          <TouchableOpacity style={styles.Loginbtn}>SIGN UP</TouchableOpacity>
+          <TouchableOpacity onPress={Register}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
           
         </View>
       </View>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   backgroundImage: {
