@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Text,
   View,
@@ -8,9 +8,34 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
 
-export class Login extends Component {
-  render() {
+const Login = ({navigation}) => {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const Register = () =>{
+
+    const auth = getAuth();
+   signInWithEmailAndPassword(auth, email, password)
+     .then((userCredential) => {
+       // Signed up 
+       const user = userCredential.user;
+       alert("Your successfully created account")
+       navigation.navigate("Signup")
+   
+       // ...
+     })
+     .catch((error) => {
+       const errorCode = error.code;
+       const errorMessage = error.message;
+       // ..
+     });
+   }
+   
+
     return (
       <View>
         <ImageBackground
@@ -24,21 +49,31 @@ export class Login extends Component {
             <Text style={styles.title}>SIGN IN</Text>
             <View style={styles.inputContainer}>
             <Image source={require("../assets/user.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Username" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)} 
+            />
           </View>
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/MUNI.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Password" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+             />
           </View>
 
-          <TouchableOpacity style={styles.Loginbtn}>SIGN UP</TouchableOpacity>
-          <TouchableOpacity style={styles.btn2}>SIGN UP</TouchableOpacity>
+          <TouchableOpacity style={styles.Loginbtn} onPress={Register}><Text style={styles.Loginbtn}>Login</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.Loginbtn} onPress={() => navigation.navigate("Signup")}><Text style={styles.Loginbtn}>SignUp</Text></TouchableOpacity>
         </View>
       </View>
     );
   }
-}
+
 
 const styles = StyleSheet.create({
   backgroundImage: {
