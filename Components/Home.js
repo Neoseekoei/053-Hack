@@ -1,7 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const Home = ({navigation}) => {
+
+  const [chat, setChat] = useState([]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [botTyping, setBotTyping] = useState(false);
+
+  useEffect(() => {
+    console.log("called");
+    const objDiv = document.getElementById("messageArea");
+    objDiv.scrollTop = objDiv.scrollHeight;
+  }, [chat])
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const name = "Kabelo";
+    const request_temp = {sender: "user", sender_id: name, message: inputMessage};
+
+    if (inputMessage !== "") {
+      setChat(chat => [...chat, request_temp]);
+      setBotTyping(true);
+      setInputMessage("");
+      rasaAPI(name, inputMessage);
+    } else {
+      window.alert("Please enter valid message");
+    }
+  }
+
+  const rasaAPI = async function handleClick(name, message) {
+    await fetch("http://localhost:5005/webhooks/rest/webhook", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "charset": "UTF-8",
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({ "sender": name, "message": message }),
+    })
+    .then(response => response.json())
+    .then((response) => {
+      if (response) {
+        const temp = response[0];
+        const recipient_id = temp["recipient_id"];
+        const recipient_message = temp["text"];
+
+        const response_temp = {sender: "bot", recipient_id : recipient_id,message: recipient_message};
+        setBotTyping(false);
+
+        setChat(chat => [...chat, response_temp]);
+      }
+    })
+  }
+
+  console.log(chat);
+
+
+
+
+
+
+
   const [message, setMessage] = useState("Hi, How can I help you");
 
   const handleUserIconPress = () => {
