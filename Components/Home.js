@@ -1,90 +1,71 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import Voice from 'react-native-voice';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-const Home = ({ navigation }) => {
-  const [messages, setMessages] = useState([
-    { text: "Hi, How can I help you", isBot: true },
-  ]);
-  const [userInput, setUserInput] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
+const Home = ({navigation}) => {
 
-  const requestMicrophonePermission = async () => {
-    try {
-      const granted = await Voice.requestPermissions({
-        voice: true, // request microphone access
-        voiceRecognition: true, // request voice recognition access
-      });
-      if (granted) {
-        console.log('Microphone permission granted');
-      } else {
-        console.log('Microphone permission denied');
-        // Handle the case where the user denied microphone access
-      }
-    } catch (error) {
-      console.error('Error requesting microphone permission: ', error);
-    }
-  };
+  const [chat, setChat] = useState([]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [botTyping, setBotTyping] = useState(false);
 
   useEffect(() => {
-    requestMicrophonePermission();
-    Voice.onSpeechEnd = handleSpeechRecognition;
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
+    console.log("called");
+    const objDiv = document.getElementById("messageArea");
+    objDiv.scrollTop = objDiv.scrollHeight;
+  }, [chat])
 
-  const handleUserInput = () => {
-    if (userInput) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: userInput, isBot: false },
-      ]);
-  
-      // Bot responds based on user input
-      const botResponse = getBotResponse(userInput);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: botResponse, isBot: true },
-      ]);
-  
-      // Clear the input field
-      setUserInput("");
-    }
-  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const name = "Kabelo";
+    const request_temp = {sender: "user", sender_id: name, message: inputMessage};
 
-  const getBotResponse = (userInput) => {
-    
-    userInput = userInput.toLowerCase();
-
-    if (userInput.includes("discount")) {
-      return "Early payment discounts are incentives offered by the municipality for prompt payment of bills. If you pay your account in full and on time, you can add up to significant savings over time.";
-    } else if (userInput.includes("help")) {
-      return "How can I assist you today?";
+    if (inputMessage !== "") {
+      setChat(chat => [...chat, request_temp]);
+      setBotTyping(true);
+      setInputMessage("");
+      rasaAPI(name, inputMessage);
     } else {
-      return "I'm sorry, I couldn't understand your request. Please try again.";
+      window.alert("Please enter valid message");
     }
-  };
+  }
 
-  const startVoiceRecording = async () => {
-    try {
-      await Voice.start("en-US");
-      setIsRecording(true);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const rasaAPI = async function handleClick(name, message) {
+    await fetch("http://localhost:5005/webhooks/rest/webhook", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "charset": "UTF-8",
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({ "sender": name, "message": message }),
+    })
+    .then(response => response.json())
+    .then((response) => {
+      if (response) {
+        const temp = response[0];
+        const recipient_id = temp["recipient_id"];
+        const recipient_message = temp["text"];
 
-  const stopVoiceRecording = async () => {
-    try {
-      await Voice.stop();
-      setIsRecording(false);
-    } catch (e) {
-      console.error(e);
-    }
+        const response_temp = {sender: "bot", recipient_id : recipient_id,message: recipient_message};
+        setBotTyping(false);
+
+        setChat(chat => [...chat, response_temp]);
+      }
+    })
+  }
+
+  console.log(chat);
+
+
+
+
+
+
+
+  const [message, setMessage] = useState("Hi, How can I help you");
+
+  const handleUserIconPress = () => {
+    setMessage("I need help regarding water & sanitation");
   };
 
   const handleSpeechRecognition = (e) => {
@@ -175,7 +156,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row",
     alignItems: "center",
-    maxWidth: "70%",
+    width: "auto", // Set maxWidth to auto
     padding: 10,
     marginVertical: 8,
     borderRadius: 8,
@@ -194,7 +175,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 16,
-    color: "#22719E",
+    color: "#000",
   },
   inputContainer: {
     flexDirection: "row",
@@ -213,6 +194,17 @@ const styles = StyleSheet.create({
   microphoneIcon: {
     marginHorizontal: 8,
   },
+
+  botmessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start"
+  },
+
+  usermessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start",
+  }
+
 });
 
 export default Home;
