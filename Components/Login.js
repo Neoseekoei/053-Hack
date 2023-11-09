@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     top: 10,
     alignSelf: "center",
   },
-
   signup: {
     height: 100,
     width: 300,
@@ -139,7 +138,6 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     paddingBottom: 450,
   },
-
   title: {
     color: "#22719E",
     textAlign: "center",
@@ -148,7 +146,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     marginBottom:60
   },
-
   //   user:{
   //     alignSelf:'center',
   //     marginTop:50,
@@ -158,9 +155,7 @@ const styles = StyleSheet.create({
   //     padding:7,
   //     paddingLeft:80,
   //     borderColor:'#ffff'
-
   //   }
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -176,8 +171,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.7,
     shadowRadius: 4,
-
-    
   },
   icon: {
     width: 24,
@@ -191,7 +184,6 @@ const styles = StyleSheet.create({
     borderColor:'#ffff'
     // Other input styles
   },
-
   Loginbtn:{
     borderWidth:1,
     width:250,
@@ -208,7 +200,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 4,
   },
-
   btn2:{
     textAlign:'center',
     marginTop:10,
@@ -231,5 +222,4 @@ const styles = StyleSheet.create({
   
 
 });
-
 export default Login;
