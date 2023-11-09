@@ -68,25 +68,55 @@ const Home = ({navigation}) => {
     setMessage("I need help regarding water & sanitation");
   };
 
-  const handleChoicePress = () => {
-    setMessage("Please choose from the following options/");
+  const handleSpeechRecognition = (e) => {
+    const recognizedText = e.value;
+    setUserInput(recognizedText);
+    handleUserInput();
   };
+
+ 
 
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.muni}>Muni-Solve Bot</Text>
-        <TouchableOpacity onPress={handleUserIconPress}>
-          <View style={styles.user}>
-            <Image source={require("../assets/user.png")} style={styles.userIcon} />
-          </View>
-        </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Muni-Solve Bot</Text>
+        <Icon name="user" size={24} color="#007AFF" />
       </View>
+      <View style={styles.chatContainer}>
+  <ScrollView>
+    {messages.map((message, index) => (
+      <View key={index} style={styles.messageContainer}>
+        {message.isBot ? (
+          <FontAwesome5 name="robot" size={24} color="#007AFF" style={styles.botmessageIcon} />
+        ) : (
+          <Icon name="user" size={24} color="#007AFF" style={styles.usermessageIcon} />
+        )}
+        <View
+          style={[
+            message.isBot ? styles.botMessage : styles.userMessage,
+            styles.textContainer,
+          ]}
+        >
+          <Text style={styles.messageText}>{message.text}</Text>
+        </View>
+      </View>
+    ))}
+  </ScrollView>
+</View>
+
       <View style={styles.inputContainer}>
-        <Image source={require("../assets/icons8-m-64.png")} style={styles.icon} />
-        <Text style={styles.message}>{message}</Text>
-        <TouchableOpacity onPress={handleChoicePress}>
-          <Text style={styles.choiceText}>View Choices</Text>
+        <TouchableOpacity onPress={isRecording ? stopVoiceRecording : startVoiceRecording}>
+          <Icon name={isRecording ? "stop-circle" : "microphone"} size={24} color="#007AFF" style={styles.microphoneIcon} />
+        </TouchableOpacity>
+        <TextInput
+          style={styles.inputField}
+          placeholder="Type your message..."
+          value={userInput}
+          onChangeText={(text) => setUserInput(text)}
+          onSubmitEditing={handleUserInput}
+        />
+        <TouchableOpacity onPress={handleUserInput}>
+          <Icon name="send" size={24} color="#007AFF" />
         </TouchableOpacity>
       </View>
     </View>
@@ -94,73 +124,76 @@ const Home = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#ffffff",
-      },
-      top: {
-        height: 50,
-        backgroundColor: "#F8F3F3",
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 16,
-        width: 450
-      },
-      muni: {
-        marginLeft: 90,
-        fontSize: 24,
-      },
-      user: {
-        marginLeft: "auto",
-      },
-      userIcon: {
-        width: 30,
-        height: 30,
-      },
-      inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderColor: "#ccc",
-        backgroundColor: "#ffff",
-        width: 250,
-        height: 40,
-        marginLeft: 24,
-        marginTop: 20,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-      },
-      icon: {
-        width: 30,
-        height: 30,
-        marginRight: 10,
-        resizeMode: "contain",
-      },
 
-      hi: {
-        borderRadius: 10,
-        backgroundColor: '#F8F3F3',
-        width: 150,
-        height:40,
-        marginTop: 20,
-        textAlign: 'center'
-      },
-
-      hi1: {
-        borderRadius: 10,
-        backgroundColor: 'blue',
-        width: 150,
-        height:40,
-        color: 'white',
-      },
-
-      hi2: {
-        borderRadius: 10,
-        backgroundColor: '#F8F3F3',
-        width: 150,
-        height:40,
-        marginTop: 20
-      },
-
-    });
+  textContainer: {
+      flex: 1,
+      maxWidth: "70%",
+      padding: 10,
+      marginVertical: 8,
+      borderRadius: 8,
     
-    export default Home;
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: "#F0F0F0",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#F8F3F3",
+    padding: 16,
+  },
+  headerText: {
+    fontSize: 24,
+    color: "#22719E"
+  },
+  chatContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  messageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    maxWidth: "70%",
+    padding: 10,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
+  botMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#E5E5EA",
+  },
+  userMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#22719E",
+  },
+  messageIcon: {
+    marginHorizontal: 8,
+    color: "#22719E"
+  },
+  messageText: {
+    fontSize: 16,
+    color: "#22719E",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+  },
+  inputField: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  microphoneIcon: {
+    marginHorizontal: 8,
+  },
+});
+
+export default Home;
