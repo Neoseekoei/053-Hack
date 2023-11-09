@@ -1,4 +1,5 @@
-import React, {  useState } from "react";
+
+import React, { Component, useState } from "react";
 import {
   Text,
   View,
@@ -8,33 +9,27 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
-
-const Signup= ({navigation}) => {
-
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-const Register = () =>{
-
- const auth = getAuth();
-createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    alert("Your successfully created account")
-    navigation.navigate("Login")
-
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-}
-
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+const Signup = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const Register = (() =>{
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        alert("You Have Successfully created!!")
+        navigation.navigate("home")
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert("error")
+        // ..
+      });
+    })
     return (
       <View>
         <ImageBackground
@@ -42,58 +37,45 @@ createUserWithEmailAndPassword(auth, email, password)
           source={require("../assets/background.png")}
         />
         <Image style={styles.logo} source={require("../assets/BotIcon.gif")} />
-
         <View style={styles.signup}>
-          
             <Text style={styles.title}>SIGN IN</Text>
             <View style={styles.inputContainer}>
             <Image source={require("../assets/user.png")} style={styles.icon} />
-            <TextInput 
-            style={styles.input} 
+            <TextInput
+            style={styles.input}
             placeholder="Username"
-            
-            />
+             />
           </View>
-
           <View style={styles.inputContainer}>
             <Image source={require("../assets/3.png")} style={styles.icon} />
-            <TextInput 
-            style={styles.input} 
+            <TextInput
+            style={styles.input}
             placeholder="Email"
-            value={email} 
-            onChangeText={(text) => setEmail(text)}
-            />
+            value={email}
+            onChangeText={setEmail}/>
           </View>
-
           <View style={styles.inputContainer}>
             <Image source={require("../assets/2.png")} style={styles.icon} />
             <TextInput style={styles.input} placeholder="Mobile Number" />
           </View>
-
           <View style={styles.inputContainer}>
             <Image source={require("../assets/MUNI.png")} style={styles.icon} />
-            <TextInput 
-            style={styles.input} 
+            <TextInput
+            style={styles.input}
             placeholder="Password"
             value={password}
-            onChangeText={(text) => setPassword(text)}
-             />
+            onChangeText={setPassword} />
           </View>
-
-          <TouchableOpacity style={styles.Loginbtn} onPress={Register}><Text style={styles.Loginbtn}>SIGN UP</Text></TouchableOpacity>
-          
+          <TouchableOpacity onPress={Register}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
         </View>
       </View>
     );
-
-}
-
+  }
 const styles = StyleSheet.create({
   backgroundImage: {
     height: 855,
     width: 392,
   },
-
   logo: {
     height: 200,
     width: 200,
@@ -102,7 +84,6 @@ const styles = StyleSheet.create({
     top: 50,
     alignSelf: "center",
   },
-
   signup: {
     height: 100,
     width: 300,
@@ -113,7 +94,6 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     paddingBottom: 450,
   },
-
   title: {
     color: "#22719E",
     textAlign: "center",
@@ -122,7 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     marginBottom:30
   },
-
   //   user:{
   //     alignSelf:'center',
   //     marginTop:50,
@@ -132,9 +111,7 @@ const styles = StyleSheet.create({
   //     padding:7,
   //     paddingLeft:80,
   //     borderColor:'#ffff'
-
   //   }
-
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -150,8 +127,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.7,
     shadowRadius: 4,
-
-    
   },
   icon: {
     width: 24,
@@ -165,7 +140,6 @@ const styles = StyleSheet.create({
     borderColor:'#ffff'
     // Other input styles
   },
-
   Loginbtn:{
     borderWidth:1,
     width:250,
@@ -182,7 +156,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.7,
     shadowRadius: 4,
   },
-
 });
-
 export default Signup;
