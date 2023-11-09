@@ -250,72 +250,85 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
 
   textContainer: {
+      flex: 1,
+      maxWidth: "70%",
+      padding: 10,
+      marginVertical: 8,
+      borderRadius: 8,
+    
+  },
+
+  container: {
     flex: 1,
-    maxWidth: "70%",
+    backgroundColor: "#F0F0F0",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#F8F3F3",
+    padding: 16,
+  },
+  headerText: {
+    fontSize: 24,
+    color: "#22719E"
+  },
+  chatContainer: {
+    flex: 1,
+    padding: 16,
+  },
+  messageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "auto", // Set maxWidth to auto
     padding: 10,
     marginVertical: 8,
     borderRadius: 8,
-},
-container: {
-  flex: 1,
-  backgroundColor: "#F0F0F0",
-},
-header: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  backgroundColor: "#F8F3F3",
-  padding: 16,
-},
-headerText: {
-  fontSize: 24,
-  color: "#22719E"
-},
-chatContainer: {
-  flex: 1,
-  padding: 16,
-},
-messageContainer: {
-  flexDirection: "row",
-  alignItems: "center",
-  maxWidth: "70%",
-  padding: 10,
-  marginVertical: 8,
-  borderRadius: 8,
-},
-botMessage: {
-  alignSelf: "flex-start",
-  backgroundColor: "#E5E5EA",
-},
-userMessage: {
-  alignSelf: "flex-end",
-  backgroundColor: "#22719E",
-},
-messageIcon: {
-  marginHorizontal: 8,
-  color: "#22719E"
-},
-messageText: {
-  fontSize: 16,
-  color: "#22719E",
-},
-inputContainer: {
-  flexDirection: "row",
-  alignItems: "center",
-  backgroundColor: "#FFFFFF",
-  padding: 16,
-},
-inputField: {
-  flex: 1,
-  height: 40,
-  borderColor: "gray",
-  borderWidth: 1,
-  borderRadius: 8,
-  paddingHorizontal: 8,
-},
-microphoneIcon: {
-  marginHorizontal: 8,
-},
+  },
+  botMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#E5E5EA",
+  },
+  userMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#22719E",
+  },
+  messageIcon: {
+    marginHorizontal: 8,
+    color: "#22719E"
+  },
+  messageText: {
+    fontSize: 16,
+    color: "#000",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+  },
+  inputField: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  microphoneIcon: {
+    marginHorizontal: 8,
+  },
+
+  botmessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start"
+  },
+
+  usermessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start",
+  }
+
 });
 
 export default Home;

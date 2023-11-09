@@ -8,22 +8,35 @@ const ForgotPassword = ({navigation}) =>{
 
   const [email, setEmail] = useState('')
 
-  const Rest = () => {
+  const validateForm = () => {
+    // You can add validation logic here, for example using react-hook-form
+    if (email.trim() === '') {
+      // Set an error message for the email field
+      errors.email = { message: "Email is required" };
+      return false;
+    }
 
-sendPasswordResetEmail(auth, email)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    alert('Check your email')
-    navigation.navigate("Login")
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-  }
+    if (password.trim() === '') {
+      // Set an error message for the password field
+      errors.password = { message: "Password is required" };
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleLogin = () => {
+    if (validateForm()) {
+      sendPasswordResetEmail(auth, email, password)
+        .then(() => {
+          alert('Log in successfully');
+          navigation.navigate("Login");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+  };
 
     return (
       <View>
@@ -47,10 +60,12 @@ sendPasswordResetEmail(auth, email)
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/3.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Email" />
+            <TextInput style={styles.input} placeholder="Email"
+            value={email}
+            onChangeText={setEmail} />
           </View>
             
-          <TouchableOpacity  onPress={Rest}><Text  style={styles.Reset} >SIGN UP</Text> </TouchableOpacity>
+          <TouchableOpacity  onPress={handleLogin}><Text  style={styles.Reset} >SIGN UP</Text> </TouchableOpacity>
         </View>
       </View>
     );
