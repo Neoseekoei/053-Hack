@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row",
     alignItems: "center",
-    maxWidth: "70%",
+    width: "auto", // Set maxWidth to auto
     padding: 10,
     marginVertical: 8,
     borderRadius: 8,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 16,
-    color: "#22719E",
+    color: "#000",
   },
   inputContainer: {
     flexDirection: "row",
@@ -213,6 +213,17 @@ const styles = StyleSheet.create({
   microphoneIcon: {
     marginHorizontal: 8,
   },
+
+  botmessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start"
+  },
+
+  usermessageIcon: {
+    marginRight: 5,
+    alignSelf: "flex-start",
+  }
+
 });
 
 export default Home;
