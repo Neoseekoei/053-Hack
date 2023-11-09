@@ -1,88 +1,106 @@
-import React, { Component } from "react";
+import React from "react";
 import {
-  Text,
   View,
+  Text,
   ImageBackground,
   StyleSheet,
   Image,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import {useState} from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import { useForm } from "react-hook-form";
 
+const Login = ({ navigation }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
+  const validateForm = () => {
+    // You can add validation logic here, for example using react-hook-form
+    if (email.trim() === '') {
+      // Set an error message for the email field
+      errors.email = { message: "Email is required" };
+      return false;
+    }
 
-const Login = ({navigation}) => {
+    if (password.trim() === '') {
+      // Set an error message for the password field
+      errors.password = { message: "Password is required" };
+      return false;
+    }
 
+    return true;
+  };
 
+  const handleLogin = () => {
+    if (validateForm()) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert('Log in successfully');
+          navigation.navigate("home");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+  };
 
-
-    const [text, onChangeText] = React.useState('');
-
-     // State variable to hold the password
-	const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('')
-
-	// State variable to track password visibility
-	const [showPassword, setShowPassword] = useState(false);
-
-	// Function to toggle the password visibility state
-	const toggleShowPassword = ({navigation}) => {
-		setShowPassword(!showPassword);
-	};
-
-  const Create =(() =>{
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        alert("You Have Successfully Logged In!!!")
-        navigation.navigate("Profile")
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
-    })
-
-    return (
-      <View>
-        <ImageBackground
-          style={styles.backgroundImage}
-          source={require("../assets/background.png")}
-        />
-        <Image style={styles.logo} source={require("../assets/BotIcon.gif")} />
-
-        <View style={styles.signup}>
-          
-            <Text style={styles.title}>SIGN IN</Text>
-            <View style={styles.inputContainer}>
-            <Image source={require("../assets/3.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Email" onChangeText={setEmail}/>
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Image source={require("../assets/MUNI.png")} style={styles.icon} />
-            <TextInput 
-            style={styles.input} 
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword} />
-          </View>
-
-          
-            <TouchableOpacity  onPress={Create}><Text style={styles.Loginbtn}>SIGN IN</Text></TouchableOpacity>
-          
-          <TouchableOpacity style={styles.btn2} onPress={() => navigation.navigate("Signup")}>SIGN UP</TouchableOpacity>
+  return (
+    <View>
+      <ImageBackground
+        style={styles.backgroundImage}
+        source={require("../assets/background.png")}
+      />
+      <Image style={styles.logo} source={require("../assets/BotIcon.gif")} />
+        <Text  style={styles.name}>MUNI-SOLve</Text>
+      <View style={styles.signup}>
+        <Text style={styles.title}>SIGN IN</Text>
+        <View style={styles.inputContainer}>
+          <Image source={require("../assets/3.png")} style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            onChangeText={setEmail}
+          />
         </View>
+
+        {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+
+        <View style={styles.inputContainer}>
+          <Image source={require("../assets/MUNI.png")} style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
+
+        {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+         <TouchableOpacity style={styles.forgot} onPress={() => navigation.navigate("Reset")}><Text style={styles.forgotpassword}>ForgotPassword?</Text></TouchableOpacity>
+        <TouchableOpacity onPress={handleLogin}>
+          <Text style={styles.Loginbtn}>SIGN IN</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.btn2}
+          onPress={() => navigation.navigate("Signup")}
+        >
+          SIGN UP
+        </TouchableOpacity>
       </View>
-    );
-  }
+    </View>
+  );
+};
 
 
 const styles = StyleSheet.create({
@@ -91,12 +109,23 @@ const styles = StyleSheet.create({
     width: 392,
   },
 
+  name:{
+   position:'absolute',
+   zIndex:1,
+   marginLeft:130,
+   fontSize:25,
+   marginTop:180,
+   color:"#22719E",
+   fontStyle:'Jacques Francois Shadow',
+  },
+
+
   logo: {
     height: 200,
     width: 200,
     position: "absolute",
     zIndex: 1,
-    top: 50,
+    top: 10,
     alignSelf: "center",
   },
 
@@ -186,7 +215,21 @@ const styles = StyleSheet.create({
     color:'#22719E',
     fontWeight:700,
     
+  },
+
+  forgot:{
+   alignItems: 'flex-end',
+   marginRight: 40,
+    marginTop:10,
+    fontWeight:700,
+    color:'#22719E',
+  },
+  forgotpassword: {
+    color: '#22719E',
+    
   }
+  
+
 });
 
 export default Login;

@@ -16,22 +16,35 @@ const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const Register = (() =>{
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        alert("You Have Successfully created!!")
-        navigation.navigate("Profile")
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert("error")
-        // ..
-      });
-    })
+  const validateForm = () => {
+    // You can add validation logic here, for example using react-hook-form
+    if (email.trim() === '') {
+      // Set an error message for the email field
+      errors.email = { message: "Email is required" };
+      return false;
+    }
+
+    if (password.trim() === '') {
+      // Set an error message for the password field
+      errors.password = { message: "Password is required" };
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleLogin = () => {
+    if (validateForm()) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert('Log in successfully');
+          navigation.navigate("home");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+  };
  
     return (
       <View>
@@ -75,7 +88,7 @@ const Signup = ({navigation}) => {
             onChangeText={setPassword} />
           </View>
 
-          <TouchableOpacity onPress={Register}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
+          <TouchableOpacity onPress={handleLogin}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
           
         </View>
       </View>
