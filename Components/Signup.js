@@ -15,6 +15,8 @@ const Signup = ({navigation}) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name , setName] = useState("");
+  const [number, setNumber] = useState("")
 
   const Register = (() =>{
     createUserWithEmailAndPassword(auth, email, password)
@@ -23,8 +25,13 @@ const Signup = ({navigation}) => {
         alert("You Have Successfully created!!")
         navigation.navigate("Profile")
         const user = userCredential.user;
-        // ...
-      })
+        user.updateProfile({
+          displayName: name,
+          email: email,
+          phone: number,
+        })
+
+        })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -32,6 +39,8 @@ const Signup = ({navigation}) => {
         // ..
       });
     })
+
+    
  
     return (
       <View>
@@ -49,6 +58,8 @@ const Signup = ({navigation}) => {
             <TextInput 
             style={styles.input} 
             placeholder="Username"
+            value={name}
+            onChangeText={setName}
              />
           </View>
 
@@ -63,7 +74,11 @@ const Signup = ({navigation}) => {
 
           <View style={styles.inputContainer}>
             <Image source={require("../assets/2.png")} style={styles.icon} />
-            <TextInput style={styles.input} placeholder="Mobile Number" />
+            <TextInput 
+            style={styles.input} 
+            placeholder="Mobile Number"
+            value={number}
+            onChangeText={setNumber} />
           </View>
 
           <View style={styles.inputContainer}>

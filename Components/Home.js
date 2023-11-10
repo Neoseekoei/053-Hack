@@ -1,106 +1,37 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useLayoutEffect } from 'react'
+import { auth } from '../config/firebase'
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 const Home = ({navigation}) => {
-  const [message, setMessage] = useState("Hi, How can I help you");
 
-  const handleUserIconPress = () => {
-    setMessage("I need help regarding water & sanitation");
-  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={SignOut}>
+        <AntDesign name="logout" size={24} color="black" />
+        </TouchableOpacity>
+      )
+    })
+  })
 
-  const handleChoicePress = () => {
-    setMessage("Please choose from the following options/");
-  };
+  const SignOut = () => {
+    auth.signOut().then(() => {
+      //Sign-out successful.
+      navigation.replace('Login')
+    }).catch((error) => {
+      // An error happened
+    });
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.muni}>Muni-Solve Bot</Text>
-        <TouchableOpacity onPress={handleUserIconPress}>
-          <View style={styles.user}>
-            <Image source={require("../assets/user.png")} style={styles.userIcon} />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.inputContainer}>
-        <Image source={require("../assets/icons8-m-64.png")} style={styles.icon} />
-        <Text style={styles.message}>{message}</Text>
-        <TouchableOpacity onPress={handleChoicePress}>
-          <Text style={styles.choiceText}>View Choices</Text>
-        </TouchableOpacity>
-      </View>
+    <View>
+      <Text>Home</Text>
+      <MaterialCommunityIcons name="robot" size={24} color="black" />
     </View>
-  );
-};
+  )
+}
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#ffffff",
-      },
-      top: {
-        height: 50,
-        backgroundColor: "#F8F3F3",
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 16,
-        width: 450
-      },
-      muni: {
-        marginLeft: 90,
-        fontSize: 24,
-      },
-      user: {
-        marginLeft: "auto",
-      },
-      userIcon: {
-        width: 30,
-        height: 30,
-      },
-      inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderColor: "#ccc",
-        backgroundColor: "#ffff",
-        width: 250,
-        height: 40,
-        marginLeft: 24,
-        marginTop: 20,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-      },
-      icon: {
-        width: 30,
-        height: 30,
-        marginRight: 10,
-        resizeMode: "contain",
-      },
-
-      hi: {
-        borderRadius: 10,
-        backgroundColor: '#F8F3F3',
-        width: 150,
-        height:40,
-        marginTop: 20,
-        textAlign: 'center'
-      },
-
-      hi1: {
-        borderRadius: 10,
-        backgroundColor: 'blue',
-        width: 150,
-        height:40,
-        color: 'white',
-      },
-
-      hi2: {
-        borderRadius: 10,
-        backgroundColor: '#F8F3F3',
-        width: 150,
-        height:40,
-        marginTop: 20
-      },
-
-    });
-    
-    export default Home;
+export default Home
