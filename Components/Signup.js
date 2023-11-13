@@ -1,5 +1,5 @@
 
-import React, { Component, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -12,38 +12,65 @@ import {
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 const Signup = ({navigation}) => {
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState(''); 
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
+  const [number, setNumber] = useState('') 
+  const [errors, setErrors] = useState({}); 
+  const [isFormValid, setIsFormValid] = useState(false); 
 
-  const validateForm = () => {
-    // You can add validation logic here, for example using react-hook-form
-    if (email.trim() === '') {
-      // Set an error message for the email field
-      errors.email = { message: "Email is required" };
-      return false;
-    }
+  useEffect(() => { 
 
-    if (password.trim() === '') {
-      // Set an error message for the password field
-      errors.password = { message: "Password is required" };
-      return false;
-    }
+      // Trigger form validation when name,  
+      // email, or password changes 
+      validateForm(); 
+  }, [name, email, password]); 
 
-    return true;
-  };
+  const validateForm = () => { 
+      let errors = {}; 
 
-  const handleLogin = () => {
-    if (validateForm()) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert('Log in successfully');
-          navigation.navigate("home");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
-  };
+      // Validate name field 
+      if (!name) { 
+          errors.name = 'Name is required.'; 
+      } 
+
+      // Validate email field 
+      if (!email) { 
+          errors.email = 'Email is required.'; 
+      } else if (!/\S+@\S+\.\S+/.test(email)) { 
+          errors.email = 'Email is invalid.'; 
+      } 
+
+      // Validate password field 
+      if (!password) { 
+          errors.password = 'Password is required.'; 
+      } else if (password.length < 6) { 
+          errors.password = 'Password must be at least 6 characters.'; 
+      }
+      if (!number) { 
+        errors.number = 'Number is required.'; 
+    } else if (number.length < 10) { 
+        errors.number = 'Number must be at least 10 characters.'; 
+    }  
+
+     // {errors.password && <span style={{color: 'red'}} className="error">{errors.password.message}</span>}
+      // Set the errors and update form validity 
+      setErrors(errors); 
+      setIsFormValid(Object.keys(errors).length === 0); 
+  }; 
+
+  const handleSubmit = () => { 
+      if (isFormValid) {
+          createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              alert('Log in successfully');
+              navigation.navigate("Home");
+            })
+            .catch((error) => {
+              alert(error.message);
+            });
+        }
+  }; 
  
     return (
       <View>
@@ -63,6 +90,8 @@ const Signup = ({navigation}) => {
             onChangeText={setName}
              />
           </View>
+          <Text style={{ color: 'red', marginLeft:24,  }}>{errors.name}</Text>
+
           <View style={styles.inputContainer}>
             <Image source={require("../assets/3.png")} style={styles.icon} />
             <TextInput
@@ -71,6 +100,8 @@ const Signup = ({navigation}) => {
             value={email}
             onChangeText={setEmail}/>
           </View>
+          <Text style={{ color: 'red', marginLeft:24,  }}>{errors.email}</Text>
+
           <View style={styles.inputContainer}>
             <Image source={require("../assets/2.png")} style={styles.icon} />
             <TextInput 
@@ -79,16 +110,18 @@ const Signup = ({navigation}) => {
             value={number}
             onChangeText={setNumber} />
           </View>
+          <Text style={{ color: 'red', marginLeft:24,  }}>{errors.number}</Text>
+
           <View style={styles.inputContainer}>
             <Image source={require("../assets/MUNI.png")} style={styles.icon} />
             <TextInput
             style={styles.input}
             placeholder="Password"
             value={password}
-            onChangeText={setPassword} />
+            onChangeText={setPassword} /> 
           </View>
-
-          <TouchableOpacity onPress={Register}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
+          <Text style={{ color: 'red', marginLeft:24,  }}>{errors.password}</Text>
+          <TouchableOpacity onPress={handleSubmit}> <Text style={styles.Loginbtn} >SIGN UP</Text> </TouchableOpacity>
           
         </View>
       </View>
@@ -108,7 +141,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   signup: {
-    height: 100,
+    height: 480,
     width: 300,
     backgroundColor: "#F0F1F1",
     position: "absolute",
@@ -170,7 +203,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     paddingTop:9,
     alignSelf:'center',
-    marginTop:40,
+    marginTop:10,
     backgroundColor:'#22719E',
     borderColor:'#22719E',
     color:'#ffff',

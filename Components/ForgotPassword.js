@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ImageBackground, Image,TextInput,TouchableOpacity } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
@@ -6,37 +6,54 @@ import { auth } from "../config/firebase";
 
 const ForgotPassword = ({navigation}) =>{
 
-  const [email, setEmail] = useState('')
+ 
+  const [email, setEmail] = useState(''); 
+ 
 
-  const validateForm = () => {
-    // You can add validation logic here, for example using react-hook-form
-    if (email.trim() === '') {
-      // Set an error message for the email field
-      errors.email = { message: "Email is required" };
-      return false;
-    }
+  const [errors, setErrors] = useState({}); 
+  const [isFormValid, setIsFormValid] = useState(false); 
 
-    if (password.trim() === '') {
-      // Set an error message for the password field
-      errors.password = { message: "Password is required" };
-      return false;
-    }
+  useEffect(() => { 
 
-    return true;
-  };
+    // Trigger form validation when name,  
+    // email, or password changes 
+    validateForm(); 
+}, [email]); 
 
-  const handleLogin = () => {
-    if (validateForm()) {
-      sendPasswordResetEmail(auth, email, password)
-        .then(() => {
-          alert('Log in successfully');
-          navigation.navigate("Login");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
-  };
+const validateForm = () => { 
+    let errors = {}; 
+
+    // Validate name field 
+
+
+    // Validate email field 
+    if (!email) { 
+        errors.email = 'Email is required.'; 
+    } else if (!/\S+@\S+\.\S+/.test(email)) { 
+        errors.email = 'Email is invalid.'; 
+    } 
+
+ 
+
+
+   // {errors.password && <span style={{color: 'red'}} className="error">{errors.password.message}</span>}
+    // Set the errors and update form validity 
+    setErrors(errors); 
+    setIsFormValid(Object.keys(errors).length === 0); 
+}; 
+
+const handleSubmit = () => { 
+    if (isFormValid) {
+      sendPasswordResetEmail(auth, email)
+          .then(() => {
+            alert('check your email');
+            navigation.navigate("Login");
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      }
+};
 
     return (
       <View>
@@ -64,8 +81,9 @@ const ForgotPassword = ({navigation}) =>{
             value={email}
             onChangeText={setEmail} />
           </View>
+          <Text style={{ color: 'red', marginLeft:60,  }}>{errors.email}</Text>
             
-          <TouchableOpacity  onPress={handleLogin}><Text  style={styles.Reset} >SIGN UP</Text> </TouchableOpacity>
+          <TouchableOpacity  onPress={handleSubmit}><Text  style={styles.Reset} ><Text>Rest Password</Text></Text> </TouchableOpacity>
         </View>
       </View>
     );

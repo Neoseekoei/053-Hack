@@ -8,50 +8,64 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useForm } from "react-hook-form";
 
 const Login = ({ navigation }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
+  const [name, setName] = useState(''); 
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [number, setNumber] = useState('') 
+  const [errors, setErrors] = useState({}); 
+  const [isFormValid, setIsFormValid] = useState(false); 
 
-  const validateForm = () => {
-    // You can add validation logic here, for example using react-hook-form
-    if (email.trim() === '') {
-      // Set an error message for the email field
-      errors.email = { message: "Email is required" };
-      return false;
-    }
+  useEffect(() => { 
 
-    if (password.trim() === '') {
-      // Set an error message for the password field
-      errors.password = { message: "Password is required" };
-      return false;
-    }
+      // Trigger form validation when name,  
+      // email, or password changes 
+      validateForm(); 
+  }, [name, email, password]); 
 
-    return true;
-  };
+  const validateForm = () => { 
+      let errors = {}; 
 
-  const handleLogin = () => {
-    if (validateForm()) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert('Log in successfully');
-          navigation.navigate("home");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
-  };
+      // Validate name field 
+
+      // Validate email field 
+      if (!email) { 
+          errors.email = 'Email is required.'; 
+      } else if (!/\S+@\S+\.\S+/.test(email)) { 
+          errors.email = 'Email is invalid.'; 
+      } 
+
+      // Validate password field 
+      if (!password) { 
+          errors.password = 'Password is required.'; 
+      } else if (password.length < 6) { 
+          errors.password = 'Password must be at least 6 characters.'; 
+      }
+
+
+     // {errors.password && <span style={{color: 'red'}} className="error">{errors.password.message}</span>}
+      // Set the errors and update form validity 
+      setErrors(errors); 
+      setIsFormValid(Object.keys(errors).length === 0); 
+  }; 
+
+  const handleSubmit = () => { 
+      if (isFormValid) {
+          signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              alert('Log in successfully');
+              navigation.navigate("Home");
+            })
+            .catch((error) => {
+              alert(error.message);
+            });
+        }
+  }; 
 
   return (
     <View>
@@ -71,9 +85,10 @@ const Login = ({ navigation }) => {
             onChangeText={setEmail}
           />
         </View>
+        <Text style={{ color: 'red', marginLeft:24,  }}>{errors.email}</Text>
 
-        {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
 
+       
         <View style={styles.inputContainer}>
           <Image source={require("../assets/MUNI.png")} style={styles.icon} />
           <TextInput
@@ -85,17 +100,18 @@ const Login = ({ navigation }) => {
           />
         </View>
 
-        {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+        <Text style={{ color: 'red', marginLeft:24,  }}>{errors.password}</Text>
          <TouchableOpacity style={styles.forgot} onPress={() => navigation.navigate("Reset")}><Text style={styles.forgotpassword}>ForgotPassword?</Text></TouchableOpacity>
-        <TouchableOpacity onPress={handleLogin}>
+        <TouchableOpacity onPress={handleSubmit}>
           <Text style={styles.Loginbtn}>SIGN IN</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.btn2}
+          
           onPress={() => navigation.navigate("Signup")}
         >
-          SIGN UP
+          <Text style={styles.btn2}>SIGN UP</Text>
+          
         </TouchableOpacity>
       </View>
     </View>

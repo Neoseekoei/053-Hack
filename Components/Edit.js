@@ -100,7 +100,7 @@ const Edit = () => {
         </View>
 
         <TouchableOpacity style={styles.submitbtn} onPress={handleValidation}>
-          <Text style={{ color: "white" }}>Submit</Text>
+          <Text style={{ color: "white", alignSelf: 'center' }}>Submit</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -6,8 +6,9 @@ import Login from './Components/Login';
 import Profile from './Components/Profile';
 import Signup from './Components/Signup'
 import Edit from './Components/Edit';
-import Home from './Components/Home';
+import Home from './Components/Home'
 import ForgotPassword from './Components/ForgotPassword';
+import Test from './Components/Test';
 
 
 
@@ -17,15 +18,15 @@ export default function App() {
   return (
 
     <NavigationContainer>
-    <Stack.Navigator initialRouteName='Home' >
-    <Stack.Navigator initialRouteName='Home' >
+
+    <Stack.Navigator initialRouteName='Login'  >
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Profile" component={Profile} />
-
+      <Stack.Screen name="Test" component={Test} />
       <Stack.Screen name="Reset" component={ForgotPassword} />
       <Stack.Screen name="edit" component={Edit} />
-      <Stack.Screen name="home" component={Home} />
+      <Stack.Screen name="Home" component={Home} />
 
     </Stack.Navigator>
   </NavigationContainer>
