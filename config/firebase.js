@@ -8,13 +8,13 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
 import {getFirestore} from 'firebase/firestore';
 const firebaseConfig = {
-  apiKey: "AIzaSyD7eRnVG6CoP9XbV8NqT9SukK7gahtyIPA",
-  authDomain: "muni-solve.firebaseapp.com",
-  projectId: "muni-solve",
-  storageBucket: "muni-solve.appspot.com",
-  messagingSenderId: "1091425324650",
-  appId: "1:1091425324650:web:c2cd381951bb059de44413",
-  measurementId: "G-5H68XSEJ6W"
+  apiKey: "AIzaSyBX0LQZJCd95cttcSwUZoibjjMB0IxK9tQ",
+  authDomain: "muni-3984f.firebaseapp.com",
+  projectId: "muni-3984f",
+  storageBucket: "muni-3984f.appspot.com",
+  messagingSenderId: "607644072329",
+  appId: "1:607644072329:web:d132231629ce0a15f34958",
+  measurementId: "G-EV9551401F"
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

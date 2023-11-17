@@ -6,6 +6,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { getAuth } from 'firebase/auth';
 
 
 const Home = ({navigation}) => {
@@ -33,6 +34,10 @@ const Home = ({navigation}) => {
       } catch (e) {
         console.error('Error adding document: ', e);
       }
+
+      rasaAPI("Kabelo" , "KB")
+
+      
     };
 
     addDocument(); // Move this line outside the try-catch block
@@ -66,12 +71,15 @@ const Home = ({navigation}) => {
       });
 
       const responseData = await response.json();
+      console.log(responseData)
 
       if (responseData && responseData.length > 0) {
         const temp = responseData[0];
         const recipient_id = temp["recipient_id"];
         const recipient_message = temp["text"];
         const response_temp = { sender: "bot", recipient_id: recipient_id, message: recipient_message };
+       
+       console.log(response)
         setChat((prevChat) => [...prevChat, response_temp]);
       }
     } catch (error) {
@@ -122,6 +130,7 @@ const Home = ({navigation}) => {
         </ScrollView>
       </View>
       <View style={styles.inputContainer}>
+        
         <TextInput
           style={styles.inputField}
           placeholder="Type your message..."

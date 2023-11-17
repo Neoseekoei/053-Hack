@@ -50,7 +50,7 @@ const Profile = ({navigation}) => {
         <TextInput style={styles.input} placeholder="Date of birth" />
       </View>
 
-      <TouchableOpacity ><Text style={styles.submitbtn}>Submit</Text></TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("History")}><Text style={styles.submitbtn}>Submit</Text></TouchableOpacity>
       
     </View>
   </View>

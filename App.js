@@ -9,6 +9,7 @@ import Edit from './Components/Edit';
 import Home from './Components/Home'
 import ForgotPassword from './Components/ForgotPassword';
 import Test from './Components/Test';
+import History from './Components/Chathistory';
 
 
 
@@ -27,6 +28,7 @@ export default function App() {
       <Stack.Screen name="Reset" component={ForgotPassword} />
       <Stack.Screen name="edit" component={Edit} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="History" component={History} />      
 
     </Stack.Navigator>
   </NavigationContainer>
